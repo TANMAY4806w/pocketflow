@@ -373,7 +373,7 @@ function DashboardContent() {
                   </div>
                   <div className="flex-1">
                     <p className="font-label-md text-label-md text-on-surface font-bold">{expense.note}</p>
-                    <p className="font-label-sm text-label-sm text-outline">{expense.category.name} • {new Date(expense.timestamp.seconds * 1000).toLocaleDateString()}</p>
+                    <p className="font-label-sm text-label-sm text-outline">{expense.category.name} • {new Date(expense.expenseDate).toLocaleDateString()}</p>
                   </div>
                   <p className="font-label-md text-label-md text-error">-${expense.amount.toFixed(2)}</p>
                 </div>
