@@ -290,11 +290,11 @@ function DashboardContent() {
           </div>
           <div className="relative z-10 space-y-xs">
             <p className="font-label-md text-label-md opacity-80">Remaining Budget</p>
-            <h1 className="font-display-lg text-display-lg font-extrabold tracking-tight">Rp{remainingBudget.toFixed(2)}</h1>
+            <h1 className="font-display-lg text-display-lg font-extrabold tracking-tight">₹{remainingBudget.toFixed(2)}</h1>
             <div className="flex items-center gap-xs pt-sm">
               <span className="material-symbols-outlined text-[18px]">trending_down</span>
               <span className="font-label-sm text-label-sm">
-                Spent Rp{totalSpent.toFixed(2)} of Rp{targetBudget.toFixed(2)}
+                Spent ₹{totalSpent.toFixed(2)} of ₹{targetBudget.toFixed(2)}
               </span>
             </div>
           </div>
@@ -305,12 +305,12 @@ function DashboardContent() {
           {/* Income Logged */}
           <div className="bg-surface-container-lowest p-md rounded-[24px] shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col justify-between">
             <p className="font-label-sm text-label-sm text-outline mb-xs">Income Logged</p>
-            <p className="font-headline-md text-headline-md text-on-surface">Rp{monthlyIncome.toFixed(2)}</p>
+            <p className="font-headline-md text-headline-md text-on-surface">₹{monthlyIncome.toFixed(2)}</p>
           </div>
           {/* Daily Target */}
           <div className="bg-surface-container-lowest p-md rounded-[24px] shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex flex-col justify-between">
             <p className="font-label-sm text-label-sm text-outline mb-xs">Daily Target</p>
-            <p className="font-headline-md text-headline-md text-on-surface">Rp{dailyTarget.toFixed(2)}</p>
+            <p className="font-headline-md text-headline-md text-on-surface">₹{dailyTarget.toFixed(2)}</p>
             <div className="mt-md flex items-center justify-between">
               <span className="font-label-sm text-label-sm text-primary">On Track</span>
               <span className="material-symbols-outlined text-primary text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
@@ -376,7 +376,7 @@ function DashboardContent() {
                     <p className="font-label-md text-label-md text-on-surface font-bold">{expense.note}</p>
                     <p className="font-label-sm text-label-sm text-outline">{expense.category.name} • {new Date(expense.expenseDate).toLocaleDateString()}</p>
                   </div>
-                  <p className="font-label-md text-label-md text-error">-Rp{expense.amount.toFixed(2)}</p>
+                  <p className="font-label-md text-label-md text-error">-₹{expense.amount.toFixed(2)}</p>
                 </div>
               ))
             )}
@@ -390,7 +390,7 @@ function DashboardContent() {
           </div>
           <div className="space-y-xs">
             <h4 className="font-label-md text-label-md text-on-secondary-container font-bold">Smart Saving Tip</h4>
-            <p className="font-body-md text-body-md text-on-secondary-container/80">Switching to a generic brand for your weekly coffee beans could save you <span className="font-bold">Rp40.00</span> this month.</p>
+            <p className="font-body-md text-body-md text-on-secondary-container/80">Switching to a generic brand for your weekly coffee beans could save you <span className="font-bold">₹40.00</span> this month.</p>
           </div>
         </section>
       </main>
@@ -426,7 +426,7 @@ function DashboardContent() {
             <div className="recessed-input rounded-2xl p-md text-center border border-transparent focus-within:border-primary">
               <span className="font-label-sm text-label-sm text-outline block uppercase tracking-wider mb-xs">Expense Amount</span>
               <div className="flex items-center justify-center">
-                <span className="font-display-lg text-display-lg text-primary font-bold mr-xs">Rp</span>
+                <span className="font-display-lg text-display-lg text-primary font-bold mr-xs">₹</span>
                 <span className="font-display-lg text-display-lg text-on-surface font-extrabold min-h-[56px] flex items-center">
                   {amountInput || "0.00"}
                 </span>

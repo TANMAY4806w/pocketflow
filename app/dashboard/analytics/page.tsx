@@ -206,7 +206,7 @@ export default function AnalyticsPage() {
                       ))}
                     </Pie>
                     <Tooltip 
-                      formatter={(value: number) => `Rp${value.toFixed(2)}`}
+                      formatter={(value: number) => `₹${value.toFixed(2)}`}
                       contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                     />
                     <Legend />
@@ -229,7 +229,7 @@ export default function AnalyticsPage() {
                   <YAxis hide={true} />
                   <Tooltip 
                     cursor={{ fill: 'rgba(0,0,0,0.05)' }}
-                    formatter={(value: number) => [`Rp${value.toFixed(2)}`, 'Spent']}
+                    formatter={(value: number) => [`₹${value.toFixed(2)}`, 'Spent']}
                     labelFormatter={(label) => `Day ${label}`}
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
                   />

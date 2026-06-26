@@ -397,7 +397,7 @@ export default function ExpensesPage() {
                         </div>
 
                         <div className="flex items-center gap-md">
-                          <span className="font-headline-md text-headline-md font-bold text-on-surface">-Rp{expense.amount.toFixed(2)}</span>
+                          <span className="font-headline-md text-headline-md font-bold text-on-surface">-₹{expense.amount.toFixed(2)}</span>
                           <div className="flex gap-xs">
                             <button 
                               onClick={() => handleOpenEdit(expense)}
@@ -461,7 +461,7 @@ export default function ExpensesPage() {
 
               {/* Amount */}
               <div className="space-y-xs">
-                <label className="font-label-sm text-label-sm text-outline uppercase block">Amount (Rp)</label>
+                <label className="font-label-sm text-label-sm text-outline uppercase block">Amount (₹)</label>
                 <input 
                   type="number" 
                   step="0.01"

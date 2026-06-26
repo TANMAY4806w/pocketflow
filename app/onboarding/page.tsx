@@ -229,7 +229,7 @@ export default function OnboardingPage() {
                   <div className="recessed-input rounded-2xl p-lg border border-transparent focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-container/20">
                     <label className="font-label-sm text-label-sm text-outline uppercase mb-xs block">Estimated Net Income</label>
                     <div className="flex items-center">
-                      <span className="font-display-lg text-display-lg text-primary mr-xs font-bold">Rp</span>
+                      <span className="font-display-lg text-display-lg text-primary mr-xs font-bold">₹</span>
                       <input 
                         autoFocus
                         type="number"
@@ -278,7 +278,7 @@ export default function OnboardingPage() {
                   <div className="recessed-input rounded-2xl p-lg border border-transparent focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-container/20">
                     <label className="font-label-sm text-label-sm text-outline uppercase mb-xs block">Target Monthly Budget</label>
                     <div className="flex items-center">
-                      <span className="font-display-lg text-display-lg text-primary mr-xs font-bold">Rp</span>
+                      <span className="font-display-lg text-display-lg text-primary mr-xs font-bold">₹</span>
                       <input 
                         autoFocus
                         type="number"
@@ -294,7 +294,7 @@ export default function OnboardingPage() {
                   <div className="mt-md p-md bg-surface-container-low rounded-xl flex items-start gap-md border border-outline-variant/20">
                     <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
                     <p className="font-label-md text-label-md text-on-surface-variant">
-                      Recommended: <span className="font-bold text-primary">Rp{Math.round(numericIncome * 0.8)}</span> (saving 20% of your income).
+                      Recommended: <span className="font-bold text-primary">₹{Math.round(numericIncome * 0.8)}</span> (saving 20% of your income).
                     </p>
                   </div>
                 </div>
@@ -345,7 +345,7 @@ export default function OnboardingPage() {
                           <span className="font-label-md text-label-md font-semibold text-on-surface">{expense.category}</span>
                         </div>
                         <div className="flex items-center gap-xs">
-                          <span className="text-outline font-semibold">Rp</span>
+                          <span className="text-outline font-semibold">₹</span>
                           <input 
                             type="number"
                             placeholder="0.00"
@@ -402,7 +402,7 @@ export default function OnboardingPage() {
                 <div className="flex flex-col mt-lg">
                   {totalFixedExpenses > numericBudget && (
                     <p className="text-error font-label-sm text-label-sm text-center w-full mb-md px-4 bg-error-container/20 rounded-xl py-2">
-                      Your fixed expenses (Rp{totalFixedExpenses}) exceed your monthly budget (Rp{numericBudget}). Please adjust them.
+                      Your fixed expenses (₹{totalFixedExpenses}) exceed your monthly budget (₹{numericBudget}). Please adjust them.
                     </p>
                   )}
                   <div className="flex gap-md">
@@ -441,18 +441,18 @@ export default function OnboardingPage() {
                     {/* Hero Metric - Monthly Budget */}
                     <div className="p-md rounded-2xl bg-gradient-to-br from-white to-surface-container border border-outline-variant/30 text-center shadow-sm relative overflow-hidden">
                       <span className="font-label-sm text-label-sm text-outline uppercase tracking-wider mb-xs block">Monthly Target Budget</span>
-                      <h2 className="font-display-lg text-display-lg text-primary font-extrabold">Rp{numericBudget.toFixed(2)}</h2>
+                      <h2 className="font-display-lg text-display-lg text-primary font-extrabold">₹{numericBudget.toFixed(2)}</h2>
                     </div>
 
                     {/* Bento split grid */}
                     <div className="grid grid-cols-2 gap-sm">
                       <div className="p-md rounded-2xl bg-surface-container-low border border-outline-variant/20">
                         <span className="font-label-sm text-label-sm text-outline block mb-xs">Fixed Bills</span>
-                        <h4 className="font-headline-md text-headline-md text-on-surface font-bold">Rp{totalFixedExpenses.toFixed(2)}</h4>
+                        <h4 className="font-headline-md text-headline-md text-on-surface font-bold">₹{totalFixedExpenses.toFixed(2)}</h4>
                       </div>
                       <div className="p-md rounded-2xl bg-surface-container-low border border-outline-variant/20">
                         <span className="font-label-sm text-label-sm text-outline block mb-xs">Remaining</span>
-                        <h4 className="font-headline-md text-headline-md text-on-surface font-bold">Rp{remainingBudget.toFixed(2)}</h4>
+                        <h4 className="font-headline-md text-headline-md text-on-surface font-bold">₹{remainingBudget.toFixed(2)}</h4>
                       </div>
                     </div>
 
@@ -463,14 +463,14 @@ export default function OnboardingPage() {
                           <span className="material-symbols-outlined text-primary mb-xs">bolt</span>
                           <span className="font-label-sm text-label-sm text-outline block">Daily Limit</span>
                         </div>
-                        <h4 className="font-headline-lg text-headline-lg text-primary font-bold mt-sm">Rp{suggestedDailyTarget.toFixed(2)}</h4>
+                        <h4 className="font-headline-lg text-headline-lg text-primary font-bold mt-sm">₹{suggestedDailyTarget.toFixed(2)}</h4>
                       </div>
                       <div className="p-md rounded-2xl bg-secondary-container/20 border border-outline-variant/20 flex flex-col justify-between">
                         <div>
                           <span className="material-symbols-outlined text-primary mb-xs">calendar_view_week</span>
                           <span className="font-label-sm text-label-sm text-outline block">Weekly Limit</span>
                         </div>
-                        <h4 className="font-headline-lg text-headline-lg text-primary font-bold mt-sm">Rp{suggestedWeeklyTarget.toFixed(2)}</h4>
+                        <h4 className="font-headline-lg text-headline-lg text-primary font-bold mt-sm">₹{suggestedWeeklyTarget.toFixed(2)}</h4>
                       </div>
                     </div>
                   </div>
