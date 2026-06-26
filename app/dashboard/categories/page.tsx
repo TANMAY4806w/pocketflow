@@ -155,7 +155,7 @@ function CategoriesContent() {
   }
 
   return (
-    <div className="min-h-screen pb-32 overflow-x-hidden bg-background text-on-surface">
+    <div className="min-h-screen pb-36 overflow-x-hidden bg-background text-on-surface">
       
       {/* Top Navigation Bar */}
       <header className="w-full top-0 sticky z-40 bg-surface/90 backdrop-blur-md flex justify-between items-center px-container-margin py-md border-b border-outline-variant/10">

@@ -12,6 +12,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from "recharts";
+import { BottomNav } from "../../../components/BottomNav";
 
 export default function AnalyticsPage() {
   const { user, profile, loading: authLoading } = useAuth();
@@ -132,7 +133,7 @@ export default function AnalyticsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen pb-32 overflow-x-hidden bg-background text-on-surface">
+      <div className="min-h-screen pb-36 overflow-x-hidden bg-background text-on-surface">
         
         {/* Top Header Navigation */}
         <header className="w-full top-0 sticky z-40 bg-surface/90 backdrop-blur-md flex justify-between items-center px-container-margin py-md border-b border-outline-variant/10">
@@ -173,7 +174,7 @@ export default function AnalyticsPage() {
               <span className="font-label-sm text-label-sm text-outline block mb-xs">vs. Last Month</span>
               <div className="flex items-end gap-xs">
                 <span className="font-headline-lg text-headline-lg font-bold text-on-surface">
-                  ${Math.abs(momDiff).toFixed(0)}
+                  ₹{Math.abs(momDiff).toFixed(0)}
                 </span>
               </div>
               <div className={`flex items-center gap-1 mt-sm font-label-sm text-label-sm ${momDiff > 0 ? 'text-error' : 'text-primary'}`}>
@@ -240,6 +241,7 @@ export default function AnalyticsPage() {
           </div>
 
         </main>
+        <BottomNav />
       </div>
     </ProtectedRoute>
   );

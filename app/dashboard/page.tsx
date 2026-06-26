@@ -242,7 +242,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="min-h-screen pb-32 overflow-x-hidden bg-background text-on-surface">
+    <div className="min-h-screen pb-36 overflow-x-hidden bg-background text-on-surface">
       {/* Top App Bar */}
       <header className="w-full top-0 sticky z-40 bg-surface dark:bg-on-background flex justify-between items-center px-container-margin py-md">
         <div className="flex items-center gap-sm">
@@ -342,9 +342,9 @@ function DashboardContent() {
               <span className="material-symbols-outlined">category</span>
               <span className="font-label-sm text-label-sm">Categories</span>
             </button>
-            <button className="flex-1 flex flex-col items-center justify-center gap-xs p-md bg-secondary-fixed text-on-secondary-fixed-variant rounded-xl active:scale-95 transition-transform cursor-pointer">
+            <button onClick={() => router.push("/dashboard/todos")} className="flex-1 flex flex-col items-center justify-center gap-xs p-md bg-secondary-fixed text-on-secondary-fixed-variant rounded-xl active:scale-95 transition-transform cursor-pointer">
               <span className="material-symbols-outlined">checklist</span>
-              <span className="font-label-sm text-label-sm">Add Todo</span>
+              <span className="font-label-sm text-label-sm">Todos</span>
             </button>
           </div>
         </section>
@@ -353,7 +353,7 @@ function DashboardContent() {
         <section className="space-y-md">
           <div className="flex items-center justify-between">
             <h3 className="font-headline-md text-headline-md">Last Expenses</h3>
-            <button className="text-primary font-label-md text-label-md hover:underline cursor-pointer">View all</button>
+            <button onClick={() => router.push("/expenses")} className="text-primary font-label-md text-label-md hover:underline cursor-pointer">View all</button>
           </div>
           
           <div className="bg-surface-container-lowest rounded-[24px] shadow-[0px_4px_20px_rgba(0,0,0,0.04)] divide-y divide-outline-variant/10 overflow-hidden border border-outline-variant/30">

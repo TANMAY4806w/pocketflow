@@ -24,7 +24,7 @@ export default function OnboardingPage() {
   // Fixed expenses
   const [fixedExpenses, setFixedExpenses] = useState<Array<{ category: string; amount: string; isPaid: boolean }>>([
     { category: "Rent", amount: "", isPaid: false },
-    { category: "Food", amount: "", isPaid: false },
+    { category: "Subscriptions", amount: "", isPaid: false },
     { category: "Travel", amount: "", isPaid: false },
     { category: "Other", amount: "", isPaid: false },
   ]);
@@ -325,8 +325,12 @@ export default function OnboardingPage() {
               <div className="bg-surface-container-lowest rounded-[24px] p-lg shadow-[0px_4px_20px_rgba(0,0,0,0.04)] border border-outline-variant/30 flex-grow flex flex-col justify-between">
                 <div>
                   <div className="text-center mb-md">
-                    <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs font-bold">Fixed Expenses</h1>
-                    <p className="font-body-md text-body-md text-on-surface-variant">Log bills that repeat every month to isolate your daily allowance.</p>
+                    <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs font-bold">Monthly Fixed Bills</h1>
+                    <p className="font-body-md text-body-md text-on-surface-variant">Bills you pay <strong>once per month</strong> (rent, EMI, subscriptions).</p>
+                  </div>
+                  <div className="mb-md p-sm bg-secondary-container/30 rounded-xl flex items-start gap-sm border border-secondary-container/50">
+                    <span className="material-symbols-outlined text-primary text-[18px] mt-[1px] flex-shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>lightbulb</span>
+                    <p className="font-label-sm text-label-sm text-on-surface-variant"><strong className="text-primary">Tip:</strong> Daily costs like food &amp; coffee go in the Daily Tracker — NOT here. Add them using the <strong>+ button</strong> on your dashboard.</p>
                   </div>
 
                   {/* Expenses List */}
@@ -336,8 +340,8 @@ export default function OnboardingPage() {
                         <div className="flex items-center gap-sm">
                           <div className="w-10 h-10 rounded-lg bg-secondary-container/40 flex items-center justify-center text-primary">
                             <span className="material-symbols-outlined">
-                              {expense.category === "Rent" ? "home" : 
-                               expense.category === "Food" ? "restaurant" : 
+                               {expense.category === "Rent" ? "home" : 
+                               expense.category === "Subscriptions" ? "subscriptions" : 
                                expense.category === "Travel" ? "commute" : 
                                expense.category === "Other" ? "pending_actions" : "star"}
                             </span>
