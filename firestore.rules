@@ -12,85 +12,105 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Helper: Checks if the user is a member of the requested workspace
-    // Note: For basic Phase 1, we match workspaceId with the user's uid.
-    // In Phase 2, this will check the user's active workspace memberships collection.
-    function isWorkspaceMember(workspaceId) {
-      return isAuthenticated() && (workspaceId == request.auth.uid);
+    // Helper: The workspace ID must equal the requesting user's own UID.
+    // (Phase 1 single-user mode – no shared workspaces yet.)
+    function isMyWorkspace(workspaceId) {
+      return isAuthenticated() && workspaceId == request.auth.uid;
     }
 
     // --- COLLECTION RULES ---
 
-    // 1. Users Profile
+    // 1. Users Profile – only the owner can read/write their profile
     match /users/{userId} {
       allow read, write: if isOwner(userId);
     }
 
-    // 2. Budgets configurations
+    // 2. Budgets – user can only access budgets belonging to their own workspace
     match /budgets/{budgetId} {
-      allow read, write: if isAuthenticated() && 
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
+
+      allow create: if isAuthenticated() &&
+        isMyWorkspace(request.resource.data.workspaceId);
+
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
 
-    // 3. Transactions / Expenses Logs
+    // 3. Expenses / Transactions
     match /expenses/{expenseId} {
-      allow read, write: if isAuthenticated() &&
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
+
+      allow create: if isAuthenticated() &&
+        isMyWorkspace(request.resource.data.workspaceId);
+
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
 
     // 4. Todo Tasks
     match /todos/{todoId} {
-      allow read, write: if isAuthenticated() &&
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
+
+      allow create: if isAuthenticated() &&
+        isMyWorkspace(request.resource.data.workspaceId);
+
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
 
     // 5. Savings Goals
     match /savingsGoals/{goalId} {
-      allow read, write: if isAuthenticated() &&
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
+
+      allow create: if isAuthenticated() &&
+        isMyWorkspace(request.resource.data.workspaceId);
+
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
 
     // 6. Income Records
     match /income_records/{recordId} {
-      allow read, write: if isAuthenticated() &&
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
-    }
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
 
-
-    // 6. Categories Customizations
-    match /categories/{categoryId} {
-      // Allow read if user is authenticated and is either the creator or category is system-wide
-      allow read: if isAuthenticated() && 
-        (resource.data.scope == "workspace" && isWorkspaceMember(resource.data.workspaceId) ||
-         resource.data.scope == "personal" && resource.data.ownerUserId == request.auth.uid ||
-         resource.data.ownerUserId == "system");
-
-      // Allow create only if authenticated user is setting themselves as the creator/owner
       allow create: if isAuthenticated() &&
-        request.resource.data.ownerUserId == request.auth.uid &&
-        (request.resource.data.scope == "personal" || isWorkspaceMember(request.resource.data.workspaceId));
+        isMyWorkspace(request.resource.data.workspaceId);
 
-      // Allow update only if authenticated user is the owner and maintains ownership
-      allow update: if isAuthenticated() &&
-        resource.data.ownerUserId == request.auth.uid &&
-        request.resource.data.ownerUserId == request.auth.uid &&
-        (request.resource.data.scope == "personal" || isWorkspaceMember(request.resource.data.workspaceId));
-
-      // Allow delete only if authenticated user is the owner
-      allow delete: if isAuthenticated() &&
-        resource.data.ownerUserId == request.auth.uid;
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
 
-    // 7. Monthly Aggregates
+    // 7. Categories – allow authenticated users to read any category
+    //    (system defaults have ownerUserId == "system", user ones have their uid)
+    match /categories/{categoryId} {
+      // Allow reading all categories to any authenticated user (needed for seeding)
+      allow read: if isAuthenticated();
+
+      // Allow create if user is setting themselves as the owner
+      allow create: if isAuthenticated() &&
+        (request.resource.data.ownerUserId == request.auth.uid ||
+         request.resource.data.ownerUserId == "system");
+
+      // Allow update/delete only if the user owns the category
+      allow update, delete: if isAuthenticated() &&
+        resource != null && resource.data.ownerUserId == request.auth.uid;
+    }
+
+    // 8. Monthly Aggregates (server-computed cache)
     match /monthly_aggregates/{aggregateId} {
-      allow read, write: if isAuthenticated() &&
-        (resource == null || isWorkspaceMember(resource.data.workspaceId)) &&
-        (request.resource == null || isWorkspaceMember(request.resource.data.workspaceId));
+      allow read: if isAuthenticated() &&
+        (resource == null || isMyWorkspace(resource.data.workspaceId));
+
+      allow create: if isAuthenticated() &&
+        isMyWorkspace(request.resource.data.workspaceId);
+
+      allow update, delete: if isAuthenticated() &&
+        resource != null && isMyWorkspace(resource.data.workspaceId);
     }
   }
 }
