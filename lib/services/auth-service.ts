@@ -3,12 +3,14 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut, 
+  deleteUser,
   User as FirebaseUser 
 } from "firebase/auth";
 import { 
   doc, 
   getDoc, 
-  setDoc, 
+  setDoc,
+  deleteDoc,
   serverTimestamp 
 } from "firebase/firestore";
 import { UserProfile } from "../../types";
@@ -66,5 +68,21 @@ export const AuthService = {
     const userDocRef = doc(db, "users", uid);
     const userDoc = await getDoc(userDocRef);
     return userDoc.exists() ? (userDoc.data() as UserProfile) : null;
+  },
+
+  /**
+   * Permanently deletes the active user's account and profile document.
+   * Note: This does NOT recursively delete their ledger data without a Cloud Function.
+   */
+  async deleteAccount(): Promise<void> {
+    const currentUser = auth.currentUser;
+    if (!currentUser) throw new Error("No authenticated user found.");
+    
+    // Delete profile doc first
+    const userDocRef = doc(db, "users", currentUser.uid);
+    await deleteDoc(userDocRef);
+    
+    // Delete auth user
+    await deleteUser(currentUser);
   }
 };

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "../../context/auth-context";
 import { ProtectedRoute } from "../../components/auth/protected-route";
 import { BudgetService } from "../../lib/services/budget-service";
@@ -245,7 +246,7 @@ function DashboardContent() {
       {/* Top App Bar */}
       <header className="w-full top-0 sticky z-40 bg-surface dark:bg-on-background flex justify-between items-center px-container-margin py-md">
         <div className="flex items-center gap-sm">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+          <Link href="/dashboard/settings" className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container cursor-pointer hover:opacity-80 transition-opacity">
             {profile?.photoURL ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img 
@@ -258,19 +259,19 @@ function DashboardContent() {
                 {profile?.displayName?.charAt(0) || "U"}
               </div>
             )}
-          </div>
+          </Link>
           <div className="flex flex-col">
             <span className="font-label-md text-label-md text-on-surface-variant">Hello, {profile?.displayName?.split(" ")[0]}</span>
             <span className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">{monthName} {year}</span>
           </div>
         </div>
-        <button 
-          onClick={logout}
+        <Link 
+          href="/dashboard/settings"
           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:opacity-80 cursor-pointer"
-          title="Sign Out"
+          title="Settings"
         >
-          <span className="material-symbols-outlined text-primary">logout</span>
-        </button>
+          <span className="material-symbols-outlined text-primary">settings</span>
+        </Link>
       </header>
 
       {/* Main Grid Canvas */}
