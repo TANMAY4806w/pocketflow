@@ -1,56 +1,22 @@
-const CACHE_NAME = "pocketflow-v1";
-const ASSETS_TO_CACHE = [
-  "/",
-  "/manifest.json",
-  "/favicon.ico"
-];
+// Lightweight native Service Worker for PWA Installability
+const CACHE_NAME = "pocketflow-cache-v1";
 
-// Install Event - cache core shell resources
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Just cache the root page and offline fallback if needed
+      return cache.addAll(["/"]);
     })
   );
   self.skipWaiting();
 });
 
-// Activate Event - clean up legacy caches
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
-  );
-  self.clients.claim();
+  event.waitUntil(self.clients.claim());
 });
 
-// Fetch Event - network-first caching approach for dynamic shell stability
 self.addEventListener("fetch", (event) => {
-  // Only intercept HTTP/S requests (ignore chrome-extension, etc.)
-  if (!event.request.url.startsWith("http")) return;
-
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Cache successful responses for offline availability
-        if (networkResponse.status === 200 && event.request.method === "GET") {
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
-        }
-        return networkResponse;
-      })
-      .catch(() => {
-        // Fallback to cache if network is unavailable
-        return caches.match(event.request);
-      })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
