@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const sourceIcon = "C:\\Users\\TANMAY\\.gemini\\antigravity-cli\\brain\\9b1f863b-e751-49a3-aede-82ce7f219988\\pocketflow_icon_1781531429606.jpg";
+const sourceIcon = "C:\\Users\\TANMAY\\.gemini\\antigravity-ide\\brain\\9ad13be3-a177-4d82-a98a-8a0b74e05a98\\pocketflow_logo_1782494947250.png";
 const publicDir = path.join(__dirname, "..", "public");
 
 try {
