@@ -216,7 +216,7 @@ function DashboardContent() {
           <span className="material-symbols-outlined text-[32px]">error</span>
         </div>
         <h2 className="font-headline-md text-headline-md font-bold text-on-surface mb-sm">Something went wrong</h2>
-        <p className="font-body-md text-body-md text-on-surface-variant max-w-xs mb-lg">
+        <p className="font-body-md text-body-md text-on-surface-variant w-full max-w-[320px] md:max-w-[500px] mb-lg">
           {error}
         </p>
         <div className="flex flex-col gap-sm w-full max-w-[200px]">
@@ -361,7 +361,7 @@ function DashboardContent() {
               <div className="p-xl text-center bg-surface-container-low/40">
                 <span className="material-symbols-outlined text-[48px] text-outline mb-sm">receipt_long</span>
                 <h4 className="font-headline-md text-headline-md font-bold text-on-surface mb-xs">No expenses yet</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">Tap "Add Expense" above to log your first transaction.</p>
+                <p className="font-body-md text-body-md text-on-surface-variant w-full max-w-[320px] md:max-w-[500px] mx-auto">Tap "Add Expense" above to log your first transaction.</p>
               </div>
             ) : (
               expenses.map((expense) => (
@@ -409,7 +409,7 @@ function DashboardContent() {
       {/* Add Expense Slide-Up Modal Overlay */}
       {showAddExpense && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-surface rounded-t-[32px] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up">
+          <div className="w-full max-w-[448px] md:max-w-[600px] bg-surface rounded-t-[32px] md:rounded-[32px] md:mb-[10vh] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up">
             
             {/* Modal Header */}
             <div className="flex justify-between items-center border-b border-outline-variant/15 pb-sm">
@@ -464,7 +464,7 @@ function DashboardContent() {
             </div>
 
             {/* Keypad Grid layout */}
-            <div className="grid grid-cols-3 gap-sm my-xs max-w-sm mx-auto w-full">
+            <div className="grid grid-cols-3 gap-sm my-xs w-full max-w-[384px] md:max-w-full mx-auto">
               {["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "C"].map((key) => (
                 <button
                   key={key}

@@ -178,7 +178,7 @@ function CategoriesContent() {
       </header>
 
       {/* Main Container */}
-      <main className="px-container-margin space-y-lg pt-md max-w-md mx-auto">
+      <main className="px-container-margin space-y-lg pt-md w-full max-w-[448px] md:max-w-[800px] mx-auto">
 
         {/* Messaging Logs */}
         {error && (
@@ -265,7 +265,7 @@ function CategoriesContent() {
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
           <form 
             onSubmit={handleSubmit}
-            className="w-full max-w-md bg-surface rounded-t-[32px] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up"
+            className="w-full max-w-[448px] md:max-w-[600px] bg-surface rounded-t-[32px] md:rounded-[32px] md:mb-[10vh] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up"
           >
             {/* Modal Header */}
             <div className="flex justify-between items-center border-b border-outline-variant/15 pb-sm">

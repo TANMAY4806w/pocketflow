@@ -55,7 +55,7 @@ export default function SettingsPage() {
         <h1 className="font-headline-sm text-headline-sm flex-1 text-center pr-9">Settings</h1>
       </header>
 
-      <main className="px-container-margin py-xl space-y-xl max-w-md mx-auto">
+      <main className="px-container-margin py-xl space-y-xl w-full max-w-[448px] md:max-w-[768px] mx-auto">
         {/* Profile Info */}
         <section className="flex flex-col items-center bg-surface-container-lowest border border-outline-variant/30 rounded-[24px] p-lg shadow-sm">
           <div className="w-24 h-24 rounded-full overflow-hidden mb-md border-4 border-primary-container shadow-md">

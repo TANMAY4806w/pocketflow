@@ -147,7 +147,7 @@ export default function AnalyticsPage() {
           </div>
         </header>
 
-        <main className="px-container-margin space-y-lg pt-md max-w-md mx-auto">
+        <main className="px-container-margin space-y-lg pt-md w-full max-w-[448px] md:max-w-[800px] lg:max-w-[1140px] mx-auto">
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
               {error}

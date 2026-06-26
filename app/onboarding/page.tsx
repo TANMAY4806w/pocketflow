@@ -141,7 +141,7 @@ export default function OnboardingPage() {
       
       {/* Top Header Progress Indicator */}
       <header className="w-full fixed top-0 z-50 px-container-margin py-md flex items-center justify-center bg-surface/80 backdrop-blur-md">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-[448px] md:max-w-[600px]">
           <div className="flex justify-between items-center mb-xs">
             <span className="font-label-md text-label-md text-primary uppercase tracking-widest font-bold">Step {step} of 5</span>
             <span className="font-label-md text-label-md text-outline font-semibold">{Math.round(progressPercentage)}%</span>
@@ -156,7 +156,7 @@ export default function OnboardingPage() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-grow flex items-center justify-center pt-24 px-container-margin pb-xl z-10 w-full max-w-md mx-auto">
+      <main className="flex-grow flex items-center justify-center pt-24 px-container-margin pb-xl z-10 w-full max-w-[448px] md:max-w-[600px] lg:max-w-[800px] mx-auto">
         <div className="w-full relative min-h-[500px]">
 
           {/* Error Alert Message */}

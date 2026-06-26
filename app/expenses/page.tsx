@@ -264,12 +264,12 @@ export default function ExpensesPage() {
               <h1 className="font-headline-md text-headline-md font-bold text-primary">Expense History</h1>
             </div>
           </header>
-          <main className="px-container-margin pt-xl text-center max-w-md mx-auto flex flex-col items-center justify-center">
+          <main className="px-container-margin pt-xl text-center w-full max-w-[448px] md:max-w-[800px] lg:max-w-[1140px] mx-auto flex flex-col items-center justify-center">
             <div className="w-16 h-16 bg-error-container text-on-error-container rounded-2xl flex items-center justify-center mb-lg shadow-sm">
               <span className="material-symbols-outlined text-[32px]">error</span>
             </div>
             <h2 className="font-headline-md text-headline-md font-bold text-on-surface mb-sm">Something went wrong</h2>
-            <p className="font-body-md text-body-md text-on-surface-variant max-w-xs mb-lg">
+            <p className="font-body-md text-body-md text-on-surface-variant w-full max-w-[320px] md:max-w-[500px] mb-lg">
               {error}
             </p>
             <button
@@ -306,7 +306,7 @@ export default function ExpensesPage() {
         </header>
 
         {/* Audit Search and Filter Boxes */}
-        <main className="px-container-margin space-y-md pt-md max-w-md mx-auto">
+        <main className="px-container-margin space-y-md pt-md w-full max-w-[448px] md:max-w-[800px] lg:max-w-[1140px] mx-auto">
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
               {error}
@@ -368,7 +368,7 @@ export default function ExpensesPage() {
               <div className="p-xl rounded-[24px] border border-dashed border-outline-variant/30 text-center bg-surface-container-low/40">
                 <span className="material-symbols-outlined text-[48px] text-outline mb-sm">search_off</span>
                 <h4 className="font-headline-md text-headline-md font-bold text-on-surface mb-xs">No records found</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">No expenses match your search query or selected date parameters.</p>
+                <p className="font-body-md text-body-md text-on-surface-variant w-full max-w-[320px] md:max-w-[500px] mx-auto">No expenses match your search query or selected date parameters.</p>
               </div>
             ) : (
               Object.keys(groupedExpenses).map((dateLabel) => (
@@ -446,7 +446,7 @@ export default function ExpensesPage() {
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm">
             <form 
               onSubmit={handleSaveEdit}
-              className="w-full max-w-md bg-surface rounded-t-[32px] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up"
+              className="w-full max-w-[448px] md:max-w-[600px] bg-surface rounded-t-[32px] md:rounded-[32px] md:mb-[10vh] p-lg shadow-2xl flex flex-col gap-md max-h-[90vh] overflow-y-auto border-t border-outline-variant/20 animate-slide-up"
             >
               <div className="flex justify-between items-center border-b border-outline-variant/15 pb-sm">
                 <h2 className="font-headline-md text-headline-md font-bold">Edit Transaction</h2>
