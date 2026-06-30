@@ -306,7 +306,7 @@ export default function ExpensesPage() {
         </header>
 
         {/* Audit Search and Filter Boxes */}
-        <main className="px-container-margin space-y-md pt-md w-full max-w-[448px] md:max-w-[800px] lg:max-w-[1140px] mx-auto">
+        <main className="px-container-margin space-y-md pt-md w-full max-w-[768px] mx-auto">
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
               {error}

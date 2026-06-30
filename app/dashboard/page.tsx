@@ -284,7 +284,7 @@ function DashboardContent() {
       </header>
 
       {/* Main Grid Canvas */}
-      <main className="px-container-margin space-y-lg pt-md">
+      <main className="px-container-margin space-y-lg pt-md max-w-[768px] mx-auto">
         
         {error && (
           <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
