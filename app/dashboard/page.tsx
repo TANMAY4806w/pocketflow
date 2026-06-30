@@ -60,34 +60,43 @@ function DashboardContent() {
     try {
       const workspaceId = profile.activeWorkspaceId || user.uid;
 
-      // 1. Load budget config
+      // 1. Load budget config (critical)
       const budget = await BudgetService.getCurrentBudget(workspaceId, monthKey);
       setBudgetConfig(budget);
 
-      // 2. Load monthly income total
+      // 2. Load monthly income total (critical)
       const totalIncome = await IncomeService.getMonthlyTotalIncome(workspaceId, monthKey);
       setMonthlyIncome(totalIncome || (budget?.income || 0));
 
-      // 3. Seed and Load categories dynamically
+    } catch (err: any) {
+      console.error("Dashboard Critical Load Error:", err);
+      setError("Failed to load dashboard data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+
+    // Non-critical: categories, expenses (fail silently — show empty state)
+    try {
+      const workspaceId = profile.activeWorkspaceId || user.uid;
+
+      // 3. Seed and Load categories
       await CategoryService.seedDefaultCategories(user.uid, workspaceId);
       const loadedCategories = await CategoryService.getCategories(workspaceId, user.uid);
       setCategories(loadedCategories);
 
-      // 4. Load monthly aggregates
+      // 4. Monthly spending aggregate
       const aggregate = await ExpenseService.getMonthlyAggregate(workspaceId, monthKey);
       setTotalSpent(aggregate.totalSpent);
 
-      // 5. Load recent expenses list
+      // 5. Recent expenses list
       const startOfMonth = new Date(year, month - 1, 1);
       const endOfMonth = new Date(year, month, 0, 23, 59, 59);
       const expenseResponse = await ExpenseService.getExpensesPaginated(workspaceId, startOfMonth, endOfMonth, 15);
       setExpenses(expenseResponse.logs);
 
     } catch (err: any) {
-      console.error("Dashboard Loading Error:", err);
-      setError("Failed to load dashboard data. Please try again.");
-    } finally {
-      setLoading(false);
+      // Log to console but don't break the UI — expenses just show as empty
+      console.warn("Dashboard secondary data partial load error (non-critical):", err);
     }
   };
 
@@ -398,7 +407,7 @@ function DashboardContent() {
       {/* FAB */}
       <button 
         onClick={() => setShowAddExpense(true)}
-        className="fixed bottom-24 right-container-margin w-16 h-16 bg-primary-container text-on-primary-container rounded-full shadow-lg flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+        className="fixed bottom-24 right-container-margin w-16 h-16 bg-primary-container text-on-primary-container rounded-full shadow-lg flex items-center justify-center z-[60] hover:scale-110 active:scale-95 transition-all cursor-pointer"
       >
         <span className="material-symbols-outlined text-[32px]" style={{ fontVariationSettings: "'wght' 600" }}>add</span>
       </button>
