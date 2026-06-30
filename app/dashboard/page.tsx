@@ -197,7 +197,12 @@ function DashboardContent() {
 
   if (targetBudget > 0) {
     const daysInMonth = new Date(year, month, 0).getDate();
-    const currentDay = now.getDate();
+    // If viewing a past month, assume the month is complete (currentDay = daysInMonth)
+    // If viewing the current month, use today's date
+    const realNow = new Date();
+    const isCurrentMonth = realNow.getFullYear() === year && (realNow.getMonth() + 1) === month;
+    const currentDay = isCurrentMonth ? realNow.getDate() : daysInMonth;
+    
     const expectedSpend = (targetBudget / daysInMonth) * currentDay;
     const spendRatio = totalSpent / targetBudget;
     const paceRatio = expectedSpend > 0 ? totalSpent / expectedSpend : 0;
