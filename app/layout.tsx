@@ -17,12 +17,24 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: "PocketFlow",
-  description: "A premium mobile-first personal finance tracker PWA.",
+  description: "A premium mobile-first personal finance tracker. Manage your budget, log expenses, and reach your goals seamlessly.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "PocketFlow",
+  },
+  openGraph: {
+    title: "PocketFlow - Personal Finance Tracker",
+    description: "Manage your budget and log expenses seamlessly.",
+    url: "https://pocketflow.vercel.app", // Replace with your actual domain
+    siteName: "PocketFlow",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PocketFlow - Personal Finance Tracker",
+    description: "Manage your budget and log expenses seamlessly.",
   },
 };
 
