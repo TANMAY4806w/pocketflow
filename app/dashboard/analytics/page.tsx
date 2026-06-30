@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../../context/auth-context";
 import { ProtectedRoute } from "../../../components/auth/protected-route";
 import { BudgetService } from "../../../lib/services/budget-service";
@@ -13,10 +13,12 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from "recharts";
 import { BottomNav } from "../../../components/BottomNav";
+import { MonthSelector } from "../../../components/ui/MonthSelector";
 
-export default function AnalyticsPage() {
+function AnalyticsContent() {
   const { user, profile, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,13 +29,21 @@ export default function AnalyticsPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [expenses, setExpenses] = useState<ExpenseLog[]>([]);
 
-  // Time constants
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  // Time setup via URL
+  const monthParam = searchParams.get("m");
+  const currentDate = useMemo(() => {
+    if (monthParam) {
+      const [y, m] = monthParam.split("-").map(Number);
+      if (y && m) return new Date(y, m - 1, 1);
+    }
+    return new Date();
+  }, [monthParam]);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
   const currentMonthKey = `${year}-${String(month).padStart(2, "0")}`;
   
-  const lastMonthDate = new Date(year, now.getMonth() - 1, 1);
+  const lastMonthDate = new Date(year, currentDate.getMonth() - 1, 1);
   const lastMonth = lastMonthDate.getMonth() + 1;
   const lastYear = lastMonthDate.getFullYear();
   const lastMonthKey = `${lastYear}-${String(lastMonth).padStart(2, "0")}`;
@@ -149,6 +159,10 @@ export default function AnalyticsPage() {
         </header>
 
         <main className="px-container-margin space-y-lg pt-md w-full max-w-[448px] md:max-w-[800px] lg:max-w-[1140px] mx-auto">
+          <div className="flex justify-center w-full mb-md">
+            <MonthSelector />
+          </div>
+
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
               {error}
@@ -244,5 +258,13 @@ export default function AnalyticsPage() {
         <BottomNav />
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function AnalyticsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading Analytics...</div>}>
+      <AnalyticsContent />
+    </Suspense>
   );
 }

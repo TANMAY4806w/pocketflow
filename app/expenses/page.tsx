@@ -1,19 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../context/auth-context";
 import { ProtectedRoute } from "../../components/auth/protected-route";
 import { ExpenseService } from "../../lib/services/expense-service";
 import { CategoryService } from "../../lib/services/category-service";
 import { ExpenseLog, CategoryItem } from "../../types";
 import { QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
+import { MonthSelector } from "../../components/ui/MonthSelector";
 
 type FilterType = "today" | "this-week" | "this-month" | "last-month" | "custom";
 
-export default function ExpensesPage() {
+function ExpensesContent() {
   const { user, profile, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Data list states
   const [expenses, setExpenses] = useState<ExpenseLog[]>([]);
@@ -43,23 +45,36 @@ export default function ExpensesPage() {
   const [selectedCategoryIdx, setSelectedCategoryIdx] = useState<number>(0);
   const [savingEdit, setSavingEdit] = useState(false);
 
+  // Date setup via URL
+  const monthParam = searchParams.get("m");
+  const currentDate = useMemo(() => {
+    if (monthParam) {
+      const [y, m] = monthParam.split("-").map(Number);
+      if (y && m) return new Date(y, m - 1, 1);
+    }
+    return new Date();
+  }, [monthParam]);
+
   // Setup Date Range variables based on active filters
   const getDateRange = (): { start: Date; end: Date } => {
-    const now = new Date();
-    let start = new Date();
-    let end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const now = currentDate;
+    let start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+    let end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
 
     switch (filter) {
       case "today":
-        start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        start = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+        end = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
         break;
       case "this-week":
-        const dayOfWeek = now.getDay();
-        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // start from Monday
-        start = new Date(now.getFullYear(), now.getMonth(), diff, 0, 0, 0);
+        const dayOfWeek = new Date().getDay();
+        const diff = new Date().getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        start = new Date(new Date().getFullYear(), new Date().getMonth(), diff, 0, 0, 0);
+        end = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 59);
         break;
       case "this-month":
         start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
         break;
       case "last-month":
         start = new Date(now.getFullYear(), now.getMonth() - 1, 1, 0, 0, 0);
@@ -67,10 +82,39 @@ export default function ExpensesPage() {
         break;
       case "custom":
         start = customStart ? new Date(customStart + "T00:00:00") : new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
-        end = customEnd ? new Date(customEnd + "T23:59:59") : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        end = customEnd ? new Date(customEnd + "T23:59:59") : new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
         break;
     }
     return { start, end };
+  };
+
+  const handleExportCSV = () => {
+    if (expenses.length === 0) return;
+    
+    // Create CSV header
+    const headers = ["Date", "Category", "Amount", "Note", "Wallet"];
+    
+    // Format rows
+    const rows = expenses.map(e => [
+      e.expenseDate.toLocaleDateString(),
+      `"${e.category.name}"`,
+      e.amount.toString(),
+      `"${e.note.replace(/"/g, '""')}"`,
+      `"${e.wallet}"`
+    ]);
+    
+    // Combine
+    const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    
+    // Trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `PocketFlow_Expenses_${currentDate.getFullYear()}-${currentDate.getMonth() + 1}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Main loader helper
@@ -307,6 +351,18 @@ export default function ExpensesPage() {
 
         {/* Audit Search and Filter Boxes */}
         <main className="px-container-margin space-y-md pt-md w-full max-w-[768px] mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-sm mb-md w-full">
+            <MonthSelector />
+            <button 
+              onClick={handleExportCSV}
+              disabled={expenses.length === 0}
+              className="flex items-center gap-xs px-sm py-xs bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              Export CSV
+            </button>
+          </div>
+
           {error && (
             <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
               {error}
@@ -538,5 +594,13 @@ export default function ExpensesPage() {
 
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function ExpensesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading Expenses...</div>}>
+      <ExpensesContent />
+    </Suspense>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "../../context/auth-context";
 import { ProtectedRoute } from "../../components/auth/protected-route";
@@ -12,10 +12,12 @@ import { CategoryService } from "../../lib/services/category-service";
 import { BudgetConfig, ExpenseLog, CategoryItem } from "../../types";
 import { BudgetHealthRing } from "../../components/dashboard/BudgetHealthRing";
 import { BottomNav } from "../../components/BottomNav";
+import { MonthSelector } from "../../components/ui/MonthSelector";
 
 function DashboardContent() {
   const { user, profile, logout, loading: authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,11 +35,18 @@ function DashboardContent() {
   const [selectedCategoryIdx, setSelectedCategoryIdx] = useState<number>(0);
   const [savingExpense, setSavingExpense] = useState(false);
 
-  // Date constants
-  const now = new Date();
-  const monthName = now.toLocaleString("default", { month: "long" });
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
+  // Date setup via URL
+  const monthParam = searchParams.get("m");
+  const currentDate = useMemo(() => {
+    if (monthParam) {
+      const [y, m] = monthParam.split("-").map(Number);
+      if (y && m) return new Date(y, m - 1, 1);
+    }
+    return new Date();
+  }, [monthParam]);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
   const monthKey = `${year}-${String(month).padStart(2, "0")}`;
 
   // Load dashboard dataset
@@ -285,6 +294,9 @@ function DashboardContent() {
 
       {/* Main Grid Canvas */}
       <main className="px-container-margin space-y-lg pt-md max-w-[768px] mx-auto">
+        <div className="flex justify-center w-full mb-md">
+          <MonthSelector />
+        </div>
         
         {error && (
           <div className="p-md bg-error-container text-on-error-container rounded-lg font-label-sm text-label-sm">
@@ -516,7 +528,9 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <ProtectedRoute>
-      <DashboardContent />
+      <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">Loading Dashboard...</div>}>
+        <DashboardContent />
+      </Suspense>
     </ProtectedRoute>
   );
 }
