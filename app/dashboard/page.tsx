@@ -490,8 +490,8 @@ function DashboardContent() {
           </div>
         </section>
 
-        </> {/* end budgetConfig ? <> */}
-        )} {/* end !budgetConfig ternary */}
+        </>
+        )}
 
       </main>
 

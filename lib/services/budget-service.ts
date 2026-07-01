@@ -142,7 +142,7 @@ export const BudgetService = {
       onboarded: true,
       activeWorkspaceId: workspaceId,
     });
-  }
+  },
   /**
    * Copies the budget configuration from the previous month to the given monthKey.
    * Returns the new budget if found, or null if no previous month budget exists.
