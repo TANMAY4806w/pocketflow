@@ -236,12 +236,17 @@ export default function SettingsPage() {
           ) : !budgetConfig ? (
             <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-[16px] p-lg text-center space-y-md">
               <span className="material-symbols-outlined text-[48px] text-outline">savings</span>
-              <p className="font-body-md text-body-md text-on-surface-variant">No budget set up for this month yet.</p>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                No budget set up for <strong>{monthName} {year}</strong> yet.
+              </p>
+              <p className="font-label-sm text-label-sm text-outline">
+                Click "Edit Budget" below to set your income, spending cap, and fixed bills.
+              </p>
               <button
-                onClick={() => router.push("/onboarding")}
+                onClick={() => setEditingBudget(true)}
                 className="px-6 py-3 bg-primary text-on-primary rounded-xl font-label-md text-label-md font-bold cursor-pointer hover:bg-on-primary-container transition-colors"
               >
-                Set Up Budget
+                Set Up {monthName} Budget
               </button>
             </div>
           ) : editingBudget ? (

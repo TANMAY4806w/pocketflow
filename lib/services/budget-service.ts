@@ -143,4 +143,33 @@ export const BudgetService = {
       activeWorkspaceId: workspaceId,
     });
   }
+  /**
+   * Copies the budget configuration from the previous month to the given monthKey.
+   * Returns the new budget if found, or null if no previous month budget exists.
+   */
+  async copyFromPreviousMonth(
+    userId: string,
+    workspaceId: string,
+    monthKey: string
+  ): Promise<BudgetConfig | null> {
+    // Derive the previous month key
+    const [year, month] = monthKey.split("-").map(Number);
+    const prevDate = new Date(year, month - 2, 1); // month-2 because month is 1-indexed and Date is 0-indexed
+    const prevMonthKey = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, "0")}`;
+
+    // Fetch previous month budget
+    const prevBudget = await this.getCurrentBudget(workspaceId, prevMonthKey);
+    if (!prevBudget) return null;
+
+    // Save a copy for the new month
+    return this.saveBudget(
+      userId,
+      workspaceId,
+      monthKey,
+      prevBudget.income,
+      prevBudget.monthlyBudget,
+      // Reset isPaid to false for the new month — bills start unpaid
+      prevBudget.fixedExpenses.map(e => ({ ...e, isPaid: false }))
+    );
+  },
 };

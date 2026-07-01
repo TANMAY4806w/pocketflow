@@ -112,7 +112,9 @@ function DashboardContent() {
 
   useEffect(() => {
     fetchDashboardData();
-  }, [user, profile, authLoading]);
+  // Bug #2 & #5 Fix: include monthKey so data refreshes when the month selector changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, profile, authLoading, monthKey]);
 
   // Timeout-safe loading fallback
   useEffect(() => {
@@ -128,7 +130,30 @@ function DashboardContent() {
     };
   }, [loading, authLoading]);
 
+  // Bug #4 Fix: Copy from previous month handler
+  const [copyingBudget, setCopyingBudget] = useState(false);
+  const handleCopyFromLastMonth = async () => {
+    if (!user || !profile) return;
+    setCopyingBudget(true);
+    try {
+      const workspaceId = profile.activeWorkspaceId || user.uid;
+      const copied = await BudgetService.copyFromPreviousMonth(user.uid, workspaceId, monthKey);
+      if (copied) {
+        setBudgetConfig(copied);
+      } else {
+        // No previous month found — redirect to settings to set up fresh
+        alert("No budget found for last month. Please set up your budget in Settings.");
+      }
+    } catch (err: unknown) {
+      console.error("Copy budget error:", err);
+      alert("Failed to copy budget. Please try again.");
+    } finally {
+      setCopyingBudget(false);
+    }
+  };
+
   // Handle Add Expense click
+  // Bug #4 Fix: use selected month/year context for expense date, not just new Date()
   const handleLogExpenseSubmit = async () => {
     const parsedAmount = parseFloat(amountInput);
     if (!parsedAmount || parsedAmount <= 0) {
@@ -142,13 +167,19 @@ function DashboardContent() {
       const workspaceId = profile.activeWorkspaceId || user.uid;
       const targetCategory = categories[selectedCategoryIdx];
 
+      // Use today's date if viewing current month, otherwise use last day of selected month
+      const realNow = new Date();
+      const isCurrentMonth = realNow.getFullYear() === year && (realNow.getMonth() + 1) === month;
+      const expenseDate = isCurrentMonth ? realNow : new Date(year, month - 1, new Date(year, month, 0).getDate());
+
       await ExpenseService.logExpense(
         user.uid,
         workspaceId,
         parsedAmount,
         noteInput || `${targetCategory.name} expense`,
         "Main Wallet",
-        targetCategory
+        targetCategory,
+        expenseDate
       );
 
       // Reset form states
@@ -159,7 +190,7 @@ function DashboardContent() {
 
       // Refresh dashboard data
       await fetchDashboardData();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Expense Log Error:", err);
       alert("Failed to save expense. Please try again.");
     } finally {
@@ -310,6 +341,44 @@ function DashboardContent() {
           </div>
         )}
 
+        {/* Bug #1 Fix: If no budget exists for this month, show a CTA instead of blank ₹0 */}
+        {!budgetConfig ? (
+          <section className="relative overflow-hidden bg-surface-container-lowest border border-outline-variant/30 p-lg rounded-[24px] shadow-sm text-center space-y-md">
+            <div className="w-16 h-16 bg-primary-container/40 rounded-2xl flex items-center justify-center mx-auto">
+              <span className="material-symbols-outlined text-[32px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
+            </div>
+            <div>
+              <h2 className="font-headline-md text-headline-md font-bold text-on-surface">No Budget for {monthName}</h2>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-xs">
+                You haven't set up a budget for {monthName} {year} yet.
+              </p>
+            </div>
+            <div className="flex flex-col gap-sm w-full max-w-xs mx-auto">
+              <button
+                onClick={handleCopyFromLastMonth}
+                disabled={copyingBudget}
+                className="w-full py-md bg-primary text-on-primary font-label-md text-label-md rounded-xl hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-60 flex items-center justify-center gap-xs shadow-md"
+              >
+                {copyingBudget ? (
+                  <div className="w-5 h-5 border-2 border-on-primary border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                    Copy from Last Month
+                  </>
+                )}
+              </button>
+              <Link
+                href="/dashboard/settings"
+                className="w-full py-md bg-surface-container-high text-on-surface-variant font-label-md text-label-md rounded-xl hover:bg-surface-container-highest transition-colors text-center block"
+              >
+                Set Up Fresh in Settings
+              </Link>
+            </div>
+          </section>
+        ) : (
+        <>
+
         {/* Large Remaining Budget Card */}
         <section className="relative overflow-hidden bg-primary p-lg rounded-[24px] shadow-lg text-on-primary">
           <div className="absolute top-0 right-0 p-lg opacity-10">
@@ -420,6 +489,10 @@ function DashboardContent() {
             <p className="font-body-md text-body-md text-on-secondary-container/80">Switching to a generic brand for your weekly coffee beans could save you <span className="font-bold">₹40.00</span> this month.</p>
           </div>
         </section>
+
+        </> {/* end budgetConfig ? <> */}
+        )} {/* end !budgetConfig ternary */}
+
       </main>
 
       {/* FAB */}
